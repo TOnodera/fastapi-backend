@@ -1,0 +1,60 @@
+﻿# A5:ER FORMAT:15
+# A5:ER ENCODING:UTF8
+# A5:ER Mk-1 Copyright © 2007 m.matsubara
+# A5:SQL Mk-2 Version 2.16.2 Copyright © 1997 - 2021 m.matsubara
+#  https://a5m2.mmatsubara.com
+
+[Manager]
+ProjectName=fastapi-backendのER図
+Author=takeshi onodera
+MaxEntityRowShow=1000
+ReadOnlyRecommend=0
+Page=Main
+PageInfo="Main",2,"A3Landscape",$FFFFFF
+LogicalView=1
+DecodeDomain=0
+ViewModePageIndividually=1
+ViewMode=2
+ViewFormat=0
+UseNondependenceDashLine=0
+FontName=Tahoma
+FontSize=6
+PaperSize=A4Landscape
+HeaderLeft=
+HeaderCenter=
+HeaderRight=
+FooterLeft=
+FooterCenter=
+FooterRight=
+ShowPageoutRelation=1
+RDBMSType=6
+RDBMSTypeName=PostgreSQL
+DefaultPkName=%0:s_PKC
+DefaultPkIndexName=%0:s_PKI
+DefaultIndexName=%0:s_IX%1:d
+DefaultFkName=%0:s_FK%1:d
+SqlSeparator=0
+UpperCaseKeyword=0
+ShowTag=1
+ShowCommonAttributes=0
+
+[Entity]
+PName=users
+LName=ユーザーテーブル
+Comment=ユーザーテーブル
+TableOption=
+Page=Main
+Left=300
+Top=100
+Field="id","id","integer","NOT NULL",0,"","シーケンス",$FFFFFFFF,""
+Field="名前","name","varchar(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="メールアドレス","email","varchar(256)","NOT NULL",,"","",$FFFFFFFF,""
+Field="パスワード","password","varchar(32)","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新日","updated_at","@DATETIME","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成日","create_at","@DATETIME","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20211204230528
+Position="Main",300,100,455,180
+ZOrder=1
