@@ -4,16 +4,23 @@ services:
     build: ./docker/python
     volumes:
       - ./:/home/python/app
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      TZ: ${TZ} 
+
   postgres:
     build: ./docker/postgres
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DATABASE: postgres
-      TZ: Asia/Tokyo
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+      TZ: ${TZ} 
     ports:
-      - '5432:5432'
+      - ${POSTGRES_PORT}:5432
     volumes:
       - ./docker/postgres/data:/var/lib/postgresql/data
       - ./docker/postgres/initdb:/docker-entrypoint-initdb.d

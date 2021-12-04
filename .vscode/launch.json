@@ -10,11 +10,6 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal"
-        },
-        {
-            "name": "FastAPI",
-            "type": "python",
-            "request": "launch",
         }
     ]
 }

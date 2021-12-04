@@ -1,0 +1,2 @@
+class IsSingletonException(Exception):
+    pass
