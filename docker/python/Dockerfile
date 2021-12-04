@@ -1,6 +1,8 @@
 FROM python:3.9-buster
 
 RUN apt update 
+# 開発用tmux
+RUN apt install -y tmux
 RUN useradd python -u 1000 -m
 
 WORKDIR /home/python/app
