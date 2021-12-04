@@ -12,11 +12,9 @@ def test_create_user():
         "password": "very_secret_code",
     }
     response = client.post("/users/create", json=body)
-    print(response)
     assert response.status_code == 201
 
 
 def test_get_user():
     response = client.get("/users/1")
-    print(response)
     assert response.status_code == 200
