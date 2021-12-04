@@ -1,17 +1,15 @@
 from src.exceptions.IsSingletonException import IsSingletonException
-from src.main import app
 from fastapi.testclient import TestClient
 from src.repository.DBConnection import DBConnection
 import pytest
 
-client = TestClient(app)
-
 
 def test_Connection():
-    # 取得するインスタンスは必ず同じオブジェクト
-    db1 = DBConnection.get_instance()
-    db2 = DBConnection.get_instance()
-    assert db1 is db2
+    DBConnection.connect()
+    # 取得するqueryは必ず同じオブジェクト
+    session1 = DBConnection.get_session()
+    session2 = DBConnection.get_session()
+    assert session1 is session2, print(session1, session2)
 
     # コンストラクタ経由でインスタンスを生成すると例外発生
     with pytest.raises(IsSingletonException):

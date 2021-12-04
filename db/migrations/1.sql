@@ -1,21 +1,22 @@
--- ƒ†[ƒU[ƒe[ƒuƒ‹
+-- ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ†ãƒ¼ãƒ–ãƒ«
 create table if not exists users (
-  id integer not null
+  id serial not null
   , name varchar(100) not null
   , email varchar(256) not null
   , password varchar(32) not null
-  , updated_at timestamp not null
-  , create_at timestamp not null
+  , updated_at timestamp default now() not null
+  , create_at timestamp default now() not null
   , constraint users_PKC primary key (id)
 ) ;
 
-comment on table users is 'ƒ†[ƒU[ƒe[ƒuƒ‹:ƒ†[ƒU[ƒe[ƒuƒ‹';
-comment on column users.id is 'id:ƒV[ƒPƒ“ƒX';
-comment on column users.name is '–¼‘O';
-comment on column users.email is 'ƒ[ƒ‹ƒAƒhƒŒƒX';
-comment on column users.password is 'ƒpƒXƒ[ƒh';
-comment on column users.updated_at is 'XV“ú';
-comment on column users.create_at is 'ì¬“ú';
+comment on table users is 'ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ†ãƒ¼ãƒ–ãƒ«:ãƒ¦ãƒ¼ã‚¶ãƒ¼ãƒ†ãƒ¼ãƒ–ãƒ«';
+comment on column users.id is 'id:ã‚·ãƒ¼ã‚±ãƒ³ã‚¹';
+comment on column users.name is 'åå‰';
+comment on column users.email is 'ãƒ¡ãƒ¼ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹';
+comment on column users.password is 'ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰';
+comment on column users.updated_at is 'æ›´æ–°æ—¥';
+comment on column users.create_at is 'ä½œæˆæ—¥';
+
 
 create sequence user_id_seq
     start with 1

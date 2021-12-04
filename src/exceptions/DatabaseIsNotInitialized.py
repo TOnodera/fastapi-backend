@@ -1,0 +1,2 @@
+class DatabaseIsNotInitialized(Exception):
+    pass
