@@ -1,0 +1,2 @@
+class UserEmailDupulicated(Exception):
+    pass

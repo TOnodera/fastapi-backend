@@ -1,3 +1,4 @@
+import hashlib
 from os import name
 from src.repository.DBConnection import DBConnection
 from src.domain.User.User import User as UserDomain
@@ -10,6 +11,9 @@ class User:
         self.session = DBConnection.get_session()
 
     def insert(self, user: UserDomain):
-        new_user = self.users(name=user.name, email=user.email, password=user.password)
+        hashed_pass = hashlib.sha512(user.password.encode()).hexdigest()
+        new_user = self.users(name=user.name, email=user.email, password=hashed_pass)
         self.session.add(new_user)
         self.session.commit()
+        self.session.flush()
+        return new_user
