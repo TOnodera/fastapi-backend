@@ -9,6 +9,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DATABASE: ${POSTGRES_DATABASE}
       POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_TEST_USER: ${POSTGRES_TEST_USER}
+      POSTGRES_TEST_PASSWORD: ${POSTGRES_TEST_PASSWORD}
+      POSTGRES_TEST_DATABASE: ${POSTGRES_TEST_DATABASE}
+      POSTGRES_TEST_HOST: ${POSTGRES_TEST_HOST}
+      POSTGRES_TEST_PORT: ${POSTGRES_TEST_PORT} 
       TZ: ${TZ} 
 
   postgres:
@@ -24,3 +30,17 @@ services:
     volumes:
       - ./docker/postgres/data:/var/lib/postgresql/data
       - ./docker/postgres/initdb:/docker-entrypoint-initdb.d
+
+  postgres_test:
+      build: ./docker/postgres
+      restart: always
+      environment:
+        POSTGRES_USER: ${POSTGRES_TEST_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_TEST_PASSWORD}
+        POSTGRES_DATABASE: ${POSTGRES_TEST_DATABASE}
+        TZ: ${TZ} 
+      ports:
+        - ${POSTGRES_TEST_PORT}:5432
+      volumes:
+        - ./docker/postgres_test/data:/var/lib/postgresql/data
+        - ./docker/postgres_test/initdb:/docker-entrypoint-initdb.d

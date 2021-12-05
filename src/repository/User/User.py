@@ -5,8 +5,8 @@ from src.domain.User.User import User as UserDomain
 
 
 class User:
-    def __init__(self) -> None:
-        DBConnection.connect()
+    def __init__(self, is_test=False) -> None:
+        DBConnection.connect(is_test)
         self.users = DBConnection.get_users()
         self.session = DBConnection.get_session()
 
