@@ -11,7 +11,7 @@ class User:
         self.users = DBConnection.get_users()
         self.session = DBConnection.get_session()
 
-    def insert(self, *, name: str, email: str, password: str) -> int:
+    def create(self, *, name: str, email: str, password: str) -> int:
         """
         ユーザーデータの登録
 

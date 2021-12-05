@@ -13,14 +13,14 @@ def set_up():
     return user_repository
 
 
-def test_insert():
+def test_create():
     name = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
     user_repository = set_up()
 
     user_data = {"name": name, "email": email, "password": password}
-    id = user_repository.insert(**user_data)
+    id = user_repository.create(**user_data)
 
     got_user = user_repository.get(id)
 
@@ -36,7 +36,7 @@ def test_get():
     user_repository = set_up()
 
     user_data = {"name": name, "email": email, "password": password}
-    id = user_repository.insert(**user_data)
+    id = user_repository.create(**user_data)
 
     got_user = user_repository.get(id)
     assert got_user["id"] == id
@@ -49,7 +49,7 @@ def test_update():
     user_repository = set_up()
 
     user_data = {"name": name, "email": email, "password": password}
-    id = user_repository.insert(**user_data)
+    id = user_repository.create(**user_data)
 
     updated_data = {"name": "onodera", "id": id}
     updated = user_repository.update(**updated_data)
@@ -66,7 +66,7 @@ def test_delete():
     user_repository = set_up()
 
     user_data = {"name": name, "email": email, "password": password}
-    id = user_repository.insert(**user_data)
+    id = user_repository.create(**user_data)
 
     user_repository.delete(id)
 
