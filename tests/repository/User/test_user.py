@@ -24,9 +24,9 @@ def test_insert():
 
     got_user = user_repository.get(id)
 
-    assert got_user.name == user_data["name"]
-    assert got_user.email == user_data["email"]
-    assert got_user.id == id
+    assert got_user["name"] == user_data["name"]
+    assert got_user["email"] == user_data["email"]
+    assert got_user["id"] == id
 
 
 def test_get():
@@ -39,7 +39,7 @@ def test_get():
     id = user_repository.insert(**user_data)
 
     got_user = user_repository.get(id)
-    assert got_user.id == id
+    assert got_user["id"] == id
 
 
 def test_update():
@@ -56,7 +56,7 @@ def test_update():
     got_user = user_repository.get(id)
 
     assert updated
-    assert got_user.name == updated_data["name"]
+    assert got_user["name"] == updated_data["name"]
 
 
 def test_delete():

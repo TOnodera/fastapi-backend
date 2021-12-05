@@ -33,9 +33,9 @@ class User:
         self.session.flush()
         return new_user.id
 
-    def get(self, id) -> UserDomain:
+    def get(self, id) -> dict:
         orm = self.session.query(self.users).filter(self.users.id == id).one()
-        return UserDomain(id=orm.id, name=orm.name, email=orm.email)
+        return {"id": orm.id, "name": orm.name, "email": orm.email}
 
     def update(
         self, *, id: int, name: str = None, email: str = None, password: str = None
