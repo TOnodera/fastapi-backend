@@ -1,3 +1,6 @@
+from src.repository.User import User as UserRepository
+
+
 class User:
     def __init__(
         self, *, name: str, email: str, id: int = None, password: str = None
@@ -6,3 +9,7 @@ class User:
         self.email = email
         self.id = id
         self.password = password
+        self.repo = UserRepository()
+
+    def create(data: dict):
+        pass
