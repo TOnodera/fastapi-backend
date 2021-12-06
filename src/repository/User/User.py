@@ -1,12 +1,11 @@
 import hashlib
 from sqlalchemy.sql import text
-from sqlalchemy.sql.expression import false, update
 from src.repository.DBConnection import DBConnection
-from src.domain.User.User import User as UserDomain
 
 
 class User:
     def __init__(self, is_test=False) -> None:
+        self.is_test = is_test
         DBConnection.connect(is_test)
         self.users = DBConnection.get_users()
         self.session = DBConnection.get_session()
@@ -33,7 +32,7 @@ class User:
         self.session.flush()
         return new_user.id
 
-    def get(self, id) -> dict:
+    def read(self, id) -> dict:
         orm = self.session.query(self.users).filter(self.users.id == id).one()
         return {"id": orm.id, "name": orm.name, "email": orm.email}
 
@@ -83,5 +82,6 @@ class User:
         """
         userテーブルを空にする。テストで使う。
         """
-        sql = text("TRUNCATE table users;")
-        self.session.execute(sql)
+        if self.is_test:
+            sql = text("TRUNCATE table users;")
+            self.session.execute(sql)

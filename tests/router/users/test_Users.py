@@ -15,6 +15,6 @@ def test_create_user():
     assert response.status_code == 201
 
 
-def test_get_users():
+def test_read_users():
     response = client.get("/users/1")
     assert response.status_code == 200

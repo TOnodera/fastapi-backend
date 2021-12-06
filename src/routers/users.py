@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 @router.get("/users/{item_id}", response_model=User)
-def get(item_id: int):
+def read(item_id: int):
     return {"name": "test", "email": "test@email.com", "item_id": item_id}
 
 

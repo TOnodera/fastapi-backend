@@ -22,14 +22,14 @@ def test_create():
     user_data = {"name": name, "email": email, "password": password}
     id = user_repository.create(**user_data)
 
-    got_user = user_repository.get(id)
+    got_user = user_repository.read(id)
 
     assert got_user["name"] == user_data["name"]
     assert got_user["email"] == user_data["email"]
     assert got_user["id"] == id
 
 
-def test_get():
+def test_read():
     name = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
@@ -38,7 +38,7 @@ def test_get():
     user_data = {"name": name, "email": email, "password": password}
     id = user_repository.create(**user_data)
 
-    got_user = user_repository.get(id)
+    got_user = user_repository.read(id)
     assert got_user["id"] == id
 
 
@@ -53,7 +53,7 @@ def test_update():
 
     updated_data = {"name": "onodera", "id": id}
     updated = user_repository.update(**updated_data)
-    got_user = user_repository.get(id)
+    got_user = user_repository.read(id)
 
     assert updated
     assert got_user["name"] == updated_data["name"]
@@ -71,4 +71,4 @@ def test_delete():
     user_repository.delete(id)
 
     with pytest.raises(NoResultFound):
-        user_repository.get(id)
+        user_repository.read(id)
