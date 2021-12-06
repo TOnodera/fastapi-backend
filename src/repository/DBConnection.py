@@ -24,9 +24,9 @@ class DBConnection:
         cls.__Users = Base.classes.users
 
     @classmethod
-    def connect(cls, is_test=False):
+    def connect(cls):
         if cls.__engine is None:
-            if is_test:
+            if "IS_TEST" in os.environ and int(os.environ["IS_TEST"]) == 1:
                 # テストの場合はテスト用DBを使用する
                 user = os.environ["POSTGRES_TEST_USER"]
                 password = os.environ["POSTGRES_TEST_PASSWORD"]

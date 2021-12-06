@@ -5,7 +5,7 @@ import pytest
 
 
 def test_Connection():
-    DBConnection.connect(is_test=True)
+    DBConnection.connect()
     # 取得するqueryは必ず同じオブジェクト
     session1 = DBConnection.get_session()
     session2 = DBConnection.get_session()

@@ -8,7 +8,7 @@ from src.domain.User.User import User as UserDomain
 
 
 def set_up():
-    user_repository = UserRepository(is_test=True)
+    user_repository = UserRepository()
     user_repository.truncate()
     return user_repository
 
