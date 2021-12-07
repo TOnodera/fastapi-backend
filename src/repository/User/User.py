@@ -33,7 +33,13 @@ class User:
 
     def read(self, id) -> dict:
         orm = self.session.query(self.users).filter(self.users.id == id).one()
-        return {"id": orm.id, "name": orm.name, "email": orm.email}
+        return {
+            "id": orm.id,
+            "name": orm.name,
+            "email": orm.email,
+            "created_at": orm.created_at,
+            "updated_at": orm.updated_at,
+        }
 
     def update(
         self, *, id: int, name: str = None, email: str = None, password: str = None
@@ -74,8 +80,10 @@ class User:
         return updated
 
     def delete(self, id: int):
-        orm = self.session.query(self.users).filter(self.users.id == id).one()
-        self.session.delete(orm)
+        self.session.query(self.users).filter(self.users.id == id).delete()
+
+    def read_by_email(self, email: str):
+        return self.session.query(self.users).filter(self.users.email == email).first()
 
     def truncate(self):
         """

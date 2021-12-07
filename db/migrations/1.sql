@@ -5,7 +5,7 @@ create table if not exists users (
   , email varchar(256) not null
   , password varchar(32) not null
   , updated_at timestamp default now() not null
-  , create_at timestamp default now() not null
+  , created_at timestamp default now() not null
   , constraint users_PKC primary key (id)
 ) ;
 
@@ -15,7 +15,7 @@ comment on column users.name is '名前';
 comment on column users.email is 'メールアドレス';
 comment on column users.password is 'パスワード';
 comment on column users.updated_at is '更新日';
-comment on column users.create_at is '作成日';
+comment on column users.created_at is '作成日';
 
 
 create sequence user_id_seq
