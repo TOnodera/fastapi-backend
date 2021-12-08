@@ -2,6 +2,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.expression import text
 from src.exceptions.DatabaseIsNotInitialized import DatabaseIsNotInitialized
 from src.exceptions.IsSingletonException import IsSingletonException
 
@@ -60,3 +61,8 @@ class DBConnection:
         if cls.__Users is None:
             raise DatabaseIsNotInitialized()
         return cls.__Users
+
+    @classmethod
+    def now(cls):
+        sql = text("SELECT NOW() AS NOW")
+        return cls.__session.execute(sql)["NOW"]

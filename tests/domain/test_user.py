@@ -1,9 +1,18 @@
 import pytest
-
+import time
 from src.exceptions.ValidationException import ValidationException
 from src.domain.User.User import User as UserDomain
+from src.repository.User.User import User as UserRepository
+import copy
 
 
+@pytest.fixture
+def set_up():
+    repo = UserRepository()
+    repo.truncate()
+
+
+@pytest.mark.usefixtures("set_up")
 def test_create():
     data = {
         "name": "test_string",
@@ -32,47 +41,63 @@ def test_create():
     with pytest.raises(ValidationException):
         user2.create()
 
+    # メールアドレスの形式チェック
+    invalid_email_data = {
+        "name": "test",
+        "email": "this_is_email_daaaa",
+        "password": "pass",
+    }
+    user3 = UserDomain(**invalid_email_data)
+    with pytest.raises(ValidationException):
+        user3.create()
 
+
+@pytest.mark.usefixtures("set_up")
 def test_read():
-    pass
-    """
-    user = UserDomain()
     data = {
         "name": "test_string",
         "email": "test_email@net.com",
         "password": "password",
     }
-    id: int = user.create(data)
 
-    update_data = {
-        "name": "test_string1",
-        "email": "test_email@net.com2",
-        "password": "password3",
-    }
-    user.update(update_data)
+    user = UserDomain(**data)
+    id: int = user.create()
 
     registered_data = user.read(id)
-
     assert registered_data.id == id
     assert registered_data.name == data["name"]
     assert registered_data.email == data["email"]
-    assert registered_data.password == hashlib.sha512(data["password"])
     assert registered_data.created_at is not None
     assert registered_data.updated_at is not None
 
-    # メールアドレスの重複チェック
+
+@pytest.mark.usefixtures("set_up")
+def test_update():
     data = {
         "name": "test_string",
         "email": "test_email@net.com",
         "password": "password",
     }
-    with pytest.raises(ValidationException):
-        user.update(data)
-    """
 
+    user = UserDomain(**data)
+    id: int = user.create()
+    registered_data = user.read(id)
+    created_at = registered_data.created_at
+    updated_at = registered_data.updated_at
 
-def test_update():
-    pass
+    data2 = {
+        "name": "test_string2",
+        "email": "test_email2@net.com",
+        "password": "password2",
+    }
+
+    time.sleep(1)
+    user.update(**data2)
+
+    assert user.name == data2["name"]
+    assert user.email == data2["email"]
+    assert user.created_at == created_at
+    assert user.updated_at > updated_at
 
 
 def test_delete():

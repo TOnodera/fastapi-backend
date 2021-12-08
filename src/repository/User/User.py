@@ -1,6 +1,7 @@
 import hashlib
 from sqlalchemy.sql import text
 from src.repository.DBConnection import DBConnection
+from datetime import datetime
 
 
 class User:
@@ -49,6 +50,7 @@ class User:
 
         Params
         -----
+        id: int
         name: str
         email: str
         password: str
@@ -75,6 +77,7 @@ class User:
             updated = True
 
         if updated:
+            orm.updated_at = datetime.now()
             self.session.commit()
 
         return updated

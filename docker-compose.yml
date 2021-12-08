@@ -16,7 +16,8 @@ services:
       POSTGRES_TEST_HOST: ${POSTGRES_TEST_HOST}
       POSTGRES_TEST_PORT: ${POSTGRES_TEST_PORT} 
       TZ: ${TZ} 
-
+    tty: true
+    
   postgres:
     build: ./docker/postgres
     restart: always
