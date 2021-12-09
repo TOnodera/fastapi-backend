@@ -1,9 +1,9 @@
 import pytest
 import time
+from sqlalchemy.exc import NoResultFound
 from src.exceptions.ValidationException import ValidationException
 from src.domain.User.User import User as UserDomain
 from src.repository.User.User import User as UserRepository
-import copy
 
 
 @pytest.fixture
@@ -101,4 +101,17 @@ def test_update():
 
 
 def test_delete():
-    pass
+    data = {
+        "name": "test_string",
+        "email": "test_email@net.com",
+        "password": "password",
+    }
+
+    user = UserDomain(**data)
+    id: int = user.create()
+    registered_data = user.read(id)
+
+    registered_data.delete()
+
+    with pytest.raises(NoResultFound):
+        user.read(id)

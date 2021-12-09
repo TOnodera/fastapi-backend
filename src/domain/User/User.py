@@ -87,8 +87,8 @@ class User:
 
         return updated
 
-    def delete(self, id: int):
-        pass
+    def delete(self):
+        self.__repositpry.delete(self.id)
 
     def __load(self, name: str = None, email: str = None, updated_at: datetime = None):
         if name is not None:
