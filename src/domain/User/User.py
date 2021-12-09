@@ -1,10 +1,11 @@
 from datetime import datetime
-from os import EX_TEMPFAIL, name
+from os import EX_TEMPFAIL, environ, name
 import re
 
 from sqlalchemy.sql import selectable
 from src.repository.User.User import User as UserRepository
 from src.exceptions.ValidationException import ValidationException
+from src.domain.Value.User import User as UserValue
 
 
 class User:
@@ -28,25 +29,11 @@ class User:
         self.updated_at = updated_at
 
     def create(self) -> int:
-        # 必須項目入力チェック
-        if self.name is None or self.name == "":
-            raise ValidationException("氏名を入力してください。")
-        if self.email is None or self.email == "":
-            raise ValidationException("メールアドレスを入力してください。")
-        if self.password is None or self.password == "":
-            raise ValidationException("氏名を入力してください。")
 
-        # メールアドレス形式チェック
-        if not re.match(
-            r"^[a-zA-Z0-9_.+-]+@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$",
-            self.email,
-        ):
-            raise ValidationException("メールアドレスの形式で入力してください。")
-        if self.__repositpry.read_by_email(self.email) is not None:
-            raise ValidationException("入力されたメールアドレスは既に登録されています。")
+        user_value = UserValue(name=self.name, email=self.email, password=self.password)
 
         id = self.__repositpry.create(
-            name=self.name, email=self.email, password=self.password
+            name=user_value.name, email=user_value.email, password=user_value.password
         )
 
         registered_user = self.read(id)
@@ -89,11 +76,3 @@ class User:
 
     def delete(self):
         self.__repositpry.delete(self.id)
-
-    def __load(self, name: str = None, email: str = None, updated_at: datetime = None):
-        if name is not None:
-            self.name = name
-        if email is not None:
-            self.email = email
-        if updated_at is not None:
-            self.update_at = updated_at

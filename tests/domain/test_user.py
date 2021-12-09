@@ -47,9 +47,9 @@ def test_create():
         "email": "this_is_email_daaaa",
         "password": "pass",
     }
-    user3 = UserDomain(**invalid_email_data)
+
     with pytest.raises(ValidationException):
-        user3.create()
+        UserDomain(**invalid_email_data)
 
 
 @pytest.mark.usefixtures("set_up")
