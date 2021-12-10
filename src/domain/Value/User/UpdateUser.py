@@ -38,7 +38,7 @@ class User:
         if email is not None:
             # メールアドレスの形式チェック
             if not re.match(
-                r"^[a-zA-Z0-9.+_-]+[^.]@[a-zA-Z0-9-]+\.[a-zA-Z0-9.]+$", email
+                r"^[a-zA-Z0-9.+_-]+[^.]@[a-zA-Z0-9-]+\.[a-zA-Z0-9.]+[^.]$", email
             ):
                 raise ValidationException("メールアドレスの形式が不正です。")
 
