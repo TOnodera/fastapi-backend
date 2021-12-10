@@ -5,23 +5,11 @@ from src.exceptions.ValidationException import ValidationException
 
 
 class User:
-    def __init__(
-        self,
-        *,
-        name: str,
-        email: str,
-        password: str = None,
-        id: int = None,
-        created_at: datetime = None,
-        updated_at: datetime = None,
-    ):
+    def __init__(self, *, name: str, email: str, password: str = None):
         self.__repo = UserRepository()
         self.__name = self.__validate_name(name)
         self.__email = self.__validate_email(email)
         self.__password = self.__validate_password(password)
-        self.__id = self.__validate_id(id)
-        self.__created_at = self.__validate_crerated_at(created_at)
-        self.__updated_at = self.__validate_updated_at(updated_at)
 
     @property
     def name(self) -> str:
@@ -35,22 +23,18 @@ class User:
     def password(self) -> str:
         return self.__password
 
-    @property
-    def id(self) -> str:
-        return self.__id
+    def __validate_name(self, name: str) -> str:
 
-    @property
-    def created_at(self) -> datetime:
-        return self.__created_at
+        if name is None:
+            raise ValidationException("名前を入力してください。")
 
-    @property
-    def updated_at(self):
-        return self.__updated_at
-
-    def __validate_name(self, name: str) -> None:
         return name
 
-    def __validate_email(self, email: str) -> None:
+    def __validate_email(self, email: str) -> str:
+
+        # メールアドレスの入力は必須
+        if email is None:
+            raise ValidationException("メールアドレスを入力してください。")
         # メールアドレスの形式チェック
         if not re.match(r"^[a-zA-Z0-9.+_-]+[^.]@[a-zA-Z0-9-]+\.[a-zA-Z0-9.]+$", email):
             raise ValidationException("メールアドレスの形式が不正です。")
@@ -61,22 +45,15 @@ class User:
 
         return email
 
-    def __validate_password(self, password: str) -> None:
+    def __validate_password(self, password: str) -> str:
+
+        if password is None:
+            raise ValidationException("パスワードを入力してください。")
+
         if password is not None:
             if len(password) < 8:
                 raise ValidationException("パスワードは8文字以上で入力してください。")
             if 32 < len(password):
                 raise ValidationException("パスワードは32文字以内で入力してください。")
-            return password
 
-    def __validate_id(self, id: int) -> None:
-        if id is not None:
-            return id
-
-    def __validate_crerated_at(self, created_at: datetime):
-        if created_at is not None:
-            return created_at
-
-    def __validate_updated_at(self, updated_at: datetime):
-        if updated_at is not None:
-            return updated_at
+        return password

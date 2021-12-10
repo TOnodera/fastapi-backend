@@ -1,8 +1,9 @@
 from datetime import datetime
 
 from src.repository.User.User import User as UserRepository
-from src.domain.Value.User import User as UserValue
 from src.exceptions.ArgumentsIsNotSet import ArgumentsIsNotSet
+from src.domain.Value.User.CreateUser import User as CreateValue
+from src.domain.Value.User.CreateUser import User as UpadteValue
 
 
 class User:
@@ -26,7 +27,7 @@ class User:
         self.updated_at = updated_at
 
     def create(self) -> int:
-        value_object = UserValue(
+        value_object = CreateValue(
             name=self.name, email=self.email, password=self.password
         )
         id = self.__repositpry.create(
@@ -56,7 +57,7 @@ class User:
         self, *, name: str = None, email: str = None, password: str = None
     ) -> bool:
         updated = False
-        value_object = UserValue(name=name, email=email, password=password)
+        value_object = UpadteValue(name=name, email=email, password=password)
         if name is not None:
             self.name = value_object.name
             updated = self.__repositpry.update(name=name, id=self.id)
