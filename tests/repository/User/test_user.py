@@ -2,22 +2,22 @@ import hashlib
 
 import pytest
 from sqlalchemy.exc import NoResultFound
+from src.repository.DBConnection import DBConnection
 
 from src.repository.User.User import User as UserRepository
-from src.domain.User.User import User as UserDomain
 
 
+@pytest.fixture(autouse=True)
 def set_up():
-    user_repository = UserRepository()
-    user_repository.truncate()
-    return user_repository
+    DBConnection.connect()
+    DBConnection.truncate_users()
 
 
 def test_create():
     name = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
-    user_repository = set_up()
+    user_repository = UserRepository()
 
     user_data = {"name": name, "email": email, "password": password}
     id = user_repository.create(**user_data)
@@ -33,7 +33,7 @@ def test_read():
     name = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
-    user_repository = set_up()
+    user_repository = UserRepository()
 
     user_data = {"name": name, "email": email, "password": password}
     id = user_repository.create(**user_data)
@@ -46,7 +46,7 @@ def test_update():
     name = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
-    user_repository = set_up()
+    user_repository = UserRepository()
 
     user_data = {"name": name, "email": email, "password": password}
     id = user_repository.create(**user_data)
@@ -63,7 +63,7 @@ def test_delete():
     name = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
-    user_repository = set_up()
+    user_repository = UserRepository()
 
     user_data = {"name": name, "email": email, "password": password}
     id = user_repository.create(**user_data)

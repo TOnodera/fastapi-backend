@@ -84,13 +84,7 @@ class User:
 
     def delete(self, id: int):
         self.session.query(self.users).filter(self.users.id == id).delete()
+        self.session.commit()
 
     def read_by_email(self, email: str):
         return self.session.query(self.users).filter(self.users.email == email).first()
-
-    def truncate(self):
-        """
-        userテーブルを空にする。テストで使う。
-        """
-        sql = text("TRUNCATE table users;")
-        self.session.execute(sql)

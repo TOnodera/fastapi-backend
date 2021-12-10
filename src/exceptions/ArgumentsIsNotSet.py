@@ -1,0 +1,2 @@
+class ArgumentsIsNotSet(Exception):
+    pass

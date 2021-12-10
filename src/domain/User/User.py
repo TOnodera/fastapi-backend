@@ -1,11 +1,8 @@
 from datetime import datetime
-from os import EX_TEMPFAIL, environ, name
-import re
 
-from sqlalchemy.sql import selectable
 from src.repository.User.User import User as UserRepository
-from src.exceptions.ValidationException import ValidationException
 from src.domain.Value.User import User as UserValue
+from src.exceptions.ArgumentsIsNotSet import ArgumentsIsNotSet
 
 
 class User:
@@ -29,11 +26,13 @@ class User:
         self.updated_at = updated_at
 
     def create(self) -> int:
-
-        user_value = UserValue(name=self.name, email=self.email, password=self.password)
-
+        value_object = UserValue(
+            name=self.name, email=self.email, password=self.password
+        )
         id = self.__repositpry.create(
-            name=user_value.name, email=user_value.email, password=user_value.password
+            name=value_object.name,
+            email=value_object.email,
+            password=value_object.password,
         )
 
         registered_user = self.read(id)
@@ -48,24 +47,26 @@ class User:
 
     @classmethod
     def read(cls, id: int) -> "User":
-        user = cls.__repositpry.read(id)
-        return User(**user)
+        if id is not None:
+            user = cls.__repositpry.read(id)
+            return User(**user)
+        raise ArgumentsIsNotSet("idにNoneがセットされています。")
 
     def update(
         self, *, name: str = None, email: str = None, password: str = None
     ) -> bool:
         updated = False
-
+        value_object = UserValue(name=name, email=email, password=password)
         if name is not None:
-            self.name = name
+            self.name = value_object.name
             updated = self.__repositpry.update(name=name, id=self.id)
 
         if email is not None:
-            self.email = email
+            self.email = value_object.email
             updated = self.__repositpry.update(email=email, id=self.id)
 
         if password is not None:
-            self.password = password
+            self.password = value_object.password
             updated = self.__repositpry.update(password=password, id=self.id)
 
         if updated:

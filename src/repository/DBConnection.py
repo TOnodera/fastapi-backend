@@ -66,3 +66,12 @@ class DBConnection:
     def now(cls):
         sql = text("SELECT NOW() AS NOW")
         return cls.__session.execute(sql)["NOW"]
+
+    @classmethod
+    def truncate_users(cls):
+        """
+        userテーブルを空にする。テストで使う。
+        """
+        sql = text("TRUNCATE table users;")
+        cls.__session.execute(sql)
+        cls.__session.commit()

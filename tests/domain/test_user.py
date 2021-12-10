@@ -1,18 +1,19 @@
-import pytest
 import time
+
+import pytest
 from sqlalchemy.exc import NoResultFound
+
 from src.exceptions.ValidationException import ValidationException
 from src.domain.User.User import User as UserDomain
-from src.repository.User.User import User as UserRepository
+from src.repository.DBConnection import DBConnection
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def set_up():
-    repo = UserRepository()
-    repo.truncate()
+    DBConnection.connect()
+    DBConnection.truncate_users()
 
 
-@pytest.mark.usefixtures("set_up")
 def test_create():
     data = {
         "name": "test_string",
@@ -37,6 +38,7 @@ def test_create():
         "email": "test_email@net.com",
         "password": "password",
     }
+
     user2 = UserDomain(**data)
     with pytest.raises(ValidationException):
         user2.create()
@@ -49,7 +51,8 @@ def test_create():
     }
 
     with pytest.raises(ValidationException):
-        UserDomain(**invalid_email_data)
+        user = UserDomain(**invalid_email_data)
+        user.create()
 
 
 @pytest.mark.usefixtures("set_up")
@@ -81,6 +84,7 @@ def test_update():
 
     user = UserDomain(**data)
     id: int = user.create()
+
     registered_data = user.read(id)
     created_at = registered_data.created_at
     updated_at = registered_data.updated_at
@@ -100,6 +104,7 @@ def test_update():
     assert user.updated_at > updated_at
 
 
+@pytest.mark.usefixtures("set_up")
 def test_delete():
     data = {
         "name": "test_string",
