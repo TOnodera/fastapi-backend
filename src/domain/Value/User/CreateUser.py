@@ -4,7 +4,7 @@ from src.repository.User.User import User as UserRepository
 from src.exceptions.ValidationException import ValidationException
 
 
-class User:
+class CreateValue:
     def __init__(self, *, name: str, email: str, password: str = None):
         self.__repo = UserRepository()
         self.__name = self.__validate_name(name)

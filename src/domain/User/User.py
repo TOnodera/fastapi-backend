@@ -2,8 +2,8 @@ from datetime import datetime
 
 from src.repository.User.User import User as UserRepository
 from src.exceptions.ArgumentsIsNotSet import ArgumentsIsNotSet
-from src.domain.Value.User.CreateUser import User as CreateValue
-from src.domain.Value.User.CreateUser import User as UpadteValue
+from src.domain.Value.User.CreateUser import CreateValue
+from src.domain.Value.User.UpdateUser import UpdateValue
 
 
 class User:
@@ -57,7 +57,9 @@ class User:
         self, *, name: str = None, email: str = None, password: str = None
     ) -> bool:
         updated = False
-        value_object = UpadteValue(name=name, email=email, password=password)
+        value_object = UpdateValue(
+            id=self.id, name=name, email=email, password=password
+        )
         if name is not None:
             self.name = value_object.name
             updated = self.__repositpry.update(name=name, id=self.id)
