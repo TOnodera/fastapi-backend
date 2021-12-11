@@ -44,9 +44,7 @@ def test_read_users():
     assert "password" not in response_data
 
 
-@pytest.mark.skip
-def update():
-
+def test_update_user():
     # 登録リクエスト
     request_body = {
         "name": "testuser",
@@ -62,11 +60,11 @@ def update():
         "email": "update_test@test.com",
         "password": "update_password",
     }
-    response = client.put(f"/users/{registered_id}")
+    response = client.put(f"/users/{registered_id}", json=update_body)
     assert response.status_code == 200
 
     # 更新を確認
-    response = client.read(f"/users/{registered_id}")
+    response = client.get(f"/users/{registered_id}")
     response_data = response.json()
     assert update_body["name"] == response_data["name"]
     assert update_body["email"] == response_data["email"]
