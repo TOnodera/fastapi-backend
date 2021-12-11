@@ -1,16 +1,23 @@
 from fastapi import APIRouter
-from src.schemas.User.User import User
-from src.schemas.User.UserIn import UserIn
 from fastapi import status
+from fastapi.responses import JSONResponse
+
+from src.schemas.User.UserCreated import UserCreated
+from src.schemas.User.UserOut import UserOut
+from src.schemas.User.UserIn import UserIn
+from src.domain.User.User import User as UserDomain
 
 router = APIRouter()
 
 
-@router.get("/users/{item_id}", response_model=User)
-def read(item_id: int):
-    return {"name": "test", "email": "test@email.com", "item_id": item_id}
+@router.get("/users/{id}", response_model=UserOut)
+def read(id: int):
+    user = UserDomain.read(id)
+    return {"name": user.name, "email": user.email, "id": user.id}
 
 
-@router.post("/users/create", response_model=User, status_code=status.HTTP_201_CREATED)
-def post(user: UserIn):
-    return user
+@router.post("/users/create", response_model=UserCreated)
+def create(request: UserIn):
+    user = UserDomain(name=request.name, email=request.email, password=request.password)
+    id = user.create()
+    return JSONResponse({"id": id}, status.HTTP_201_CREATED)
