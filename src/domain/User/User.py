@@ -4,6 +4,7 @@ from src.repository.User.User import User as UserRepository
 from src.exceptions.ArgumentsIsNotSet import ArgumentsIsNotSet
 from src.domain.Value.User.CreateUser import CreateValue
 from src.domain.Value.User.UpdateUser import UpdateValue
+from src.exceptions.NoSuchObjectException import NoSuchObjectException
 
 
 class User:
@@ -48,10 +49,12 @@ class User:
 
     @classmethod
     def read(cls, id: int) -> "User":
-        if id is not None:
-            user = cls.__repositpry.read(id)
-            return User(**user)
-        raise ArgumentsIsNotSet("idにNoneがセットされています。")
+        if id is None:
+            raise ArgumentsIsNotSet("idにNoneがセットされています。")
+        user = cls.__repositpry.read(id)
+        if user is None:
+            raise NoSuchObjectException("指定されたIDと一致するユーザーが存在しません。")
+        return User(**user)
 
     def update(
         self, *, name: str = None, email: str = None, password: str = None

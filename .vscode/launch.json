@@ -6,10 +6,14 @@
             "type": "python",
             "request": "launch",
             "module": "uvicorn",
+            "cwd": "${workspaceFolder}",
             "args": [
                 "src.main:app",
                 "--reload"
-            ]
+            ],
+            "env": {
+                "IS_TEST": "1" //テスト用DB使用
+            }
         }
     ]
 }

@@ -3,6 +3,7 @@ import time
 import pytest
 from sqlalchemy.exc import NoResultFound
 
+from src.exceptions.NoSuchObjectException import NoSuchObjectException
 from src.exceptions.ValidationException import ValidationException
 from src.domain.User.User import User as UserDomain
 from src.repository.DBConnection import DBConnection
@@ -118,5 +119,5 @@ def test_delete():
 
     registered_data.delete()
 
-    with pytest.raises(NoResultFound):
+    with pytest.raises(NoSuchObjectException):
         user.read(id)

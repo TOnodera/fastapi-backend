@@ -1,7 +1,4 @@
-import hashlib
-
 import pytest
-from sqlalchemy.exc import NoResultFound
 from src.repository.DBConnection import DBConnection
 
 from src.repository.User.User import User as UserRepository
@@ -69,6 +66,4 @@ def test_delete():
     id = user_repository.create(**user_data)
 
     user_repository.delete(id)
-
-    with pytest.raises(NoResultFound):
-        user_repository.read(id)
+    assert user_repository.read(id) is None

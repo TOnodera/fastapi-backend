@@ -5,6 +5,7 @@ from fastapi.testclient import TestClient
 
 from src.main import app
 from src.repository.DBConnection import DBConnection
+from src.exceptions.NoSuchObjectException import NoSuchObjectException
 
 client = TestClient(app)
 
@@ -69,3 +70,21 @@ def test_update_user():
     assert update_body["name"] == response_data["name"]
     assert update_body["email"] == response_data["email"]
     assert "password" not in response_data
+
+
+def test_delete_user():
+    # 登録リクエスト
+    request_body = {
+        "name": "testuser",
+        "email": "test@test.com",
+        "password": "very_secret_code",
+    }
+    response = client.post("/users/create", json=request_body)
+    registered_id = response.json()["id"]
+
+    # 削除リクエスト
+    response = client.delete(f"/users/{registered_id}")
+    assert response.status_code == 204
+
+    # データ取得
+    response = client.get(f"/users/{registered_id}")

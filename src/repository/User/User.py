@@ -1,5 +1,5 @@
 import hashlib
-from sqlalchemy.sql import text
+from src.exceptions.NoSuchObjectException import NoSuchObjectException
 from src.repository.DBConnection import DBConnection
 from datetime import datetime
 
@@ -33,14 +33,16 @@ class User:
         return new_user.id
 
     def read(self, id) -> dict:
-        orm = self.session.query(self.users).filter(self.users.id == id).one()
-        return {
-            "id": orm.id,
-            "name": orm.name,
-            "email": orm.email,
-            "created_at": orm.created_at,
-            "updated_at": orm.updated_at,
-        }
+        orm = self.session.query(self.users).filter(self.users.id == id).first()
+        if orm is not None:
+            return {
+                "id": orm.id,
+                "name": orm.name,
+                "email": orm.email,
+                "created_at": orm.created_at,
+                "updated_at": orm.updated_at,
+            }
+        return None
 
     def update(
         self, *, id: int, name: str = None, email: str = None, password: str = None
@@ -61,7 +63,7 @@ class User:
             更新があった場合はtrueなければfalse
         """
         updated = False
-        orm = self.session.query(self.users).filter(self.users.id == id).one()
+        orm = self.session.query(self.users).filter(self.users.id == id).first()
         if name is not None and orm.name != name:
             orm.name = name
             updated = True
@@ -83,8 +85,10 @@ class User:
         return updated
 
     def delete(self, id: int):
-        self.session.query(self.users).filter(self.users.id == id).delete()
-        self.session.commit()
+        user = self.session.query(self.users).filter(self.users.id == id).first()
+        if user is not None:
+            self.session.delete(user)
+            self.session.commit()
 
     def read_by_email(self, email: str):
         return self.session.query(self.users).filter(self.users.email == email).first()
