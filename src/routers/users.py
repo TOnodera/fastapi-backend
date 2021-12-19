@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 from fastapi import status
 from fastapi.responses import JSONResponse
+from fastapi import File, UploadFile
 from starlette.responses import Response
+import re
 
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
 from src.exceptions.ValidationException import ValidationException
@@ -9,7 +11,7 @@ from src.schemas.User.UserOut import UserOut
 from src.schemas.User.UserIn import UserIn
 from src.schemas.User.UserUpdate import UserUpdate
 from src.domain.User.User import User as UserDomain
-
+from src.config import settings
 
 router = APIRouter()
 
@@ -68,3 +70,14 @@ def delete(id: int):
         return JSONResponse(
             {"message": str(e)}, status_code=status.HTTP_400_BAD_REQUEST
         )
+
+
+@router.post("/users/{id}/upload-file")
+def upload_file(id: int, file: UploadFile = File(...)):
+    match = re.search(r"(?<=\.)(?P<extension>[a-zA-Z]+)$", file.filename)
+    extension = match["extension"]
+    file_name = f"USER_{id}.{extension}"
+    with open(settings.USER_FILES_DIR + file_name, "wb") as f:
+        f.write(file.file.read())
+
+    return {"filename": file_name}
