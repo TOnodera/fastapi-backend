@@ -2,3 +2,4 @@ __pycache__
 docker/postgres/data
 docker/postgres/initdb
 docker/postgres_test
+storages
