@@ -3,7 +3,6 @@ from fastapi import status
 from fastapi.responses import JSONResponse
 from fastapi import File, UploadFile
 from starlette.responses import Response
-from typing import List
 import re
 
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
@@ -27,7 +26,7 @@ def create(request: UserIn):
         return JSONResponse({"id": id}, status.HTTP_201_CREATED)
     except ValidationException as e:
         return JSONResponse(
-            {"message": str(e)}, status_code=status.HTTP_400_BAD_REQUEST
+            {"message": str(e)}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
         )
 
 
@@ -73,15 +72,16 @@ def delete(id: int):
         )
 
 
-@router.post("/users/{id}/upload-file")
-def upload_file(id: int, files: List[UploadFile] = File(...)):
-    if len(files) > 0:
-        for index, file in enumerate(files):
-            match = re.search(r"(?<=\.)(?P<extension>[a-zA-Z]+)$", file.filename)
-            extension = match["extension"]
-            seq = index + 1
-            file_name = f"USER_{id}_{seq}.{extension}"
-            with open(settings.USER_FILES_DIR + file_name, "wb") as f:
-                f.write(file.file.read())
-
-    return {"uploaded_file_nums": len(files)}
+@router.post("/users/{id}/{seq}/upload-file")
+def upload_file(id: int, seq: int, file: UploadFile = File(...)):
+    try:
+        match = re.search(r"(?<=\.)(?P<extension>[a-za-z]+)$", file.filename)
+        extension = match["extension"]
+        file_name = f"USER_{id}_{seq}.{extension}"
+        with open(settings.USER_FILES_DIR + file_name, "wb") as f:
+            f.write(file.file.read())
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return JSONResponse(
+            {"message": str(e)}, status_code=status.HTTP_400_BAD_REQUEST
+        )

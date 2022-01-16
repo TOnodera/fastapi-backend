@@ -36,7 +36,7 @@ class CreateValue:
         if email is None:
             raise ValidationException("メールアドレスを入力してください。")
         # メールアドレスの形式チェック
-        if not re.match(r"^[a-zA-Z0-9.+_-]+[^.]@[a-zA-Z0-9-]+\.[a-zA-Z0-9.]+$", email):
+        if not re.match(r"^[a-zA-Z0-9.+_-]+[^.]@[a-zA-Z0-9-]+\.[a-zA-Z0-9]+$", email):
             raise ValidationException("メールアドレスの形式が不正です。")
 
         # 登録済みメールアドレスのチェック
