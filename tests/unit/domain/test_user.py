@@ -121,3 +121,28 @@ def test_delete():
 
     with pytest.raises(NoSuchObjectException):
         user.read(id)
+
+
+@pytest.mark.usefixtures("set_up")
+def test_all():
+    # テスト用データ作成
+    id_list = []
+    for i in range(10):
+        data = {
+            "name": f"test_user{i}",
+            "email": f"test_email{i}@net.com",
+            "password": "password",
+        }
+        user = UserDomain(**data)
+        id = user.create()
+        id_list.append(id)
+
+    assert len(id_list) == 10
+
+    # 登録したデータを取得できるかテスト
+    users = UserDomain.all(0, 10)
+    assert len(users) == 10
+
+    for index, user in enumerate(users):
+        assert user.name == f"test_user{index}"
+        assert user.email == f"test_email{index}@net.com"

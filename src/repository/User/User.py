@@ -1,3 +1,4 @@
+from typing import List
 import hashlib
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
 from src.repository.DBConnection import DBConnection
@@ -92,3 +93,18 @@ class User:
 
     def read_by_email(self, email: str):
         return self.session.query(self.users).filter(self.users.email == email).first()
+
+    def all(self, offset: int, limit: int) -> List[any]:
+        users = self.session.query(self.users).offset(offset).limit(limit).all()
+        results = []
+        for user in users:
+            results.append(
+                {
+                    "id": user.id,
+                    "name": user.name,
+                    "email": user.email,
+                    "created_at": user.created_at,
+                    "updated_at": user.updated_at,
+                }
+            )
+        return results

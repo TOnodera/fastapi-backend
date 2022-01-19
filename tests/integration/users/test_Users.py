@@ -1,8 +1,6 @@
 import os
-from pydoc import cli
-from _pytest.monkeypatch import resolve
 import pytest
-
+import json
 from fastapi.testclient import TestClient
 
 from src.main import app
@@ -112,3 +110,22 @@ def test_upload_file():
 
         # 後始末
         os.remove(test_file_path)
+
+
+def test_users_all():
+    id_list = []
+    for i in range(10):
+        # 登録リクエスト
+        request_body = {
+            "name": f"testuser_{i}",
+            "email": f"test{i}@test.com",
+            "password": "very_secret_code",
+        }
+        response = client.post("/users/create", json=request_body)
+        registered_id = response.json()["id"]
+        id_list.append(registered_id)
+
+    responses = client.get("/users")
+    users = responses.json()
+    for user in users:
+        assert user["id"] in id_list

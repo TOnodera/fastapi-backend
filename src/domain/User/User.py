@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from src.repository.User.User import User as UserRepository
 from src.exceptions.ArgumentsIsNotSet import ArgumentsIsNotSet
@@ -55,6 +56,14 @@ class User:
         if user is None:
             raise NoSuchObjectException("指定されたIDと一致するユーザーが存在しません。")
         return User(**user)
+
+    @classmethod
+    def all(cls, offset: int, limit: int) -> List["User"]:
+        datas = cls.__repositpry.all(offset, limit)
+        users = []
+        for data in datas:
+            users.append(User(**data))
+        return users
 
     def update(
         self, *, name: str = None, email: str = None, password: str = None

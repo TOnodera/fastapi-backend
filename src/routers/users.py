@@ -1,3 +1,5 @@
+import json
+from typing import Optional
 from fastapi import APIRouter
 from fastapi import status
 from fastapi.responses import JSONResponse
@@ -27,6 +29,28 @@ def create(request: UserIn):
     except ValidationException as e:
         return JSONResponse(
             {"message": str(e)}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
+
+
+@router.get("/users")
+def all(offset: int = 0, limit: int = 10):
+    try:
+        users = UserDomain.all(offset, limit)
+        response = []
+        for user in users:
+            response.append(
+                {
+                    "id": user.id,
+                    "name": user.name,
+                    "email": user.email,
+                    "created_at": str(user.created_at),
+                    "updated_at": str(user.updated_at),
+                }
+            )
+        return JSONResponse(response, status_code=status.HTTP_200_OK)
+    except Exception as e:
+        return JSONResponse(
+            {"message": str(e)}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 
