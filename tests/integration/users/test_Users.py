@@ -113,7 +113,7 @@ def test_upload_file():
 
 
 def test_users_all():
-    id_list = []
+    expects = []
     for i in range(10):
         # 登録リクエスト
         request_body = {
@@ -123,9 +123,34 @@ def test_users_all():
         }
         response = client.post("/users/create", json=request_body)
         registered_id = response.json()["id"]
-        id_list.append(registered_id)
+
+        # 画像もアップロードして登録する
+        ext = None  # ファイルの拡張子
+        with open(TEST_USER_IMAGE_FILE_PATH, "rb") as f:
+            file_name = TEST_USER_IMAGE_FILE_PATH.split("/")[-1]
+            ext = file_name.split(".")[-1]
+            response = client.post(
+                f"/users/{registered_id}/{i}/upload-file",
+                files={"file": (file_name, f, "image/png")},
+            )
+        # レスポンスとして期待するデータを登録しておく
+        expect = {
+            "id": registered_id,
+            "name": request_body["name"],
+            "email": request_body["email"],
+            "images": [f"/storage/users/USER_{registered_id}_{i}.{ext}"],
+        }
+        expects.append(expect)
 
     responses = client.get("/users")
     users = responses.json()
     for user in users:
-        assert user["id"] in id_list
+        # 登録したデータが存在するか確認する
+        assert user.id in expects
+        expect_data = expects.filter(lambda x: user.id == x["id"])
+        # 登録した画像が存在するかチェックする
+        expect_data["images"][0] == user.images[0]
+        file_path = f"/home/python/app/{user.images[0]}"
+        assert os.path.exists(file_path)
+        # 画像を削除する
+        os.remove(file_path)
