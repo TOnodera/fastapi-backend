@@ -7,6 +7,7 @@ from fastapi import File, UploadFile
 from starlette.responses import Response
 import re
 from typing import List
+from exceptions.FileRegistException import FileRegistException
 
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
 from src.exceptions.ValidationException import ValidationException
@@ -48,6 +49,10 @@ def create(request: UserIn, files: List[UploadFile] = File(...)) -> JSONResponse
     except ValidationException as e:
         return JSONResponse(
             {"message": str(e)}, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
+    except FileRegistException as e:
+        return JSONResponse(
+            {"message": str(e)}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
     except Exception as e:
         return JSONResponse(

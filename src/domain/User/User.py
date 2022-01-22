@@ -29,6 +29,7 @@ class User:
         self.name = name
         self.email = email
         self.password = password
+        self.filenames = []
         self.created_at = created_at
         self.updated_at = updated_at
 
@@ -67,11 +68,11 @@ class User:
         try:
             for seq, file in enumerate(files):
                 ext = file.filename.split(".")[-1]
-                with open(
-                    f"{settings.USER_FILES_DIR}/USER_{self.id}_{seq}.{ext}", "wb"
-                ) as f:
-                    f.write(file.read())
-        except Exception:
+                filename = f"USER_{self.id}_{seq}.{ext}"
+                with open(f"{settings.USER_FILES_DIR}/{filename}", "wb") as f:
+                    f.write(file.file.read())
+                    self.filenames.append(filename)
+        except Exception as e:
             raise FileRegistException("ユーザー画像ファイルのアップロードに失敗しました。")
 
     @classmethod
