@@ -1,6 +1,10 @@
 from datetime import datetime
 from typing import List
 
+from fastapi import UploadFile
+from src.exceptions.FileRegistException import FileRegistException
+from src.config import settings
+
 from src.repository.User.User import User as UserRepository
 from src.exceptions.ArgumentsIsNotSet import ArgumentsIsNotSet
 from src.domain.Value.User.CreateUser import CreateValue
@@ -47,6 +51,28 @@ class User:
         self.updated_at = registered_user.updated_at
 
         return id
+
+    def regist_files(self, files: List[UploadFile]) -> None:
+        """
+        ファイルの登録を行う
+
+        Params
+        -----
+        files: List[UploadFile]
+
+        Raises
+        -----
+        FileRegistException
+        """
+        try:
+            for seq, file in enumerate(files):
+                ext = file.filename.split(".")[-1]
+                with open(
+                    f"{settings.USER_FILES_DIR}/USER_{self.id}_{seq}.{ext}", "wb"
+                ) as f:
+                    f.write(file.read())
+        except Exception:
+            raise FileRegistException("ユーザー画像ファイルのアップロードに失敗しました。")
 
     @classmethod
     def read(cls, id: int) -> "User":

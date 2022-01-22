@@ -121,24 +121,24 @@ def test_users_all():
             "email": f"test{i}@test.com",
             "password": "very_secret_code",
         }
-        response = client.post("/users/create", json=request_body)
-        registered_id = response.json()["id"]
 
         # 画像もアップロードして登録する
         ext = None  # ファイルの拡張子
+        files = None  # ファイルアップロード用オブジェクト
         with open(TEST_USER_IMAGE_FILE_PATH, "rb") as f:
             file_name = TEST_USER_IMAGE_FILE_PATH.split("/")[-1]
             ext = file_name.split(".")[-1]
-            response = client.post(
-                f"/users/{registered_id}/{i}/upload-file",
-                files={"file": (file_name, f, "image/png")},
-            )
+            files = {"file": (file_name, f, "image/png")}
+
+        response = client.post("/users/create", request_body, files=files)
         # レスポンスとして期待するデータを登録しておく
+        response_data = response.json()
+        id = response_data["id"]
         expect = {
-            "id": registered_id,
+            "id": id,
             "name": request_body["name"],
             "email": request_body["email"],
-            "images": [f"/storage/users/USER_{registered_id}_{i}.{ext}"],
+            "images": [f"/storage/users/USER_{id}_{i}.{ext}"],
         }
         expects.append(expect)
 
