@@ -99,11 +99,8 @@ def delete(id: int):
 @router.post("/users/{id}/{seq}/upload-file")
 def upload_file(id: int, seq: int, file: UploadFile = File(...)):
     try:
-        match = re.search(r"(?<=\.)(?P<extension>[a-za-z]+)$", file.filename)
-        extension = match["extension"]
-        file_name = f"USER_{id}_{seq}.{extension}"
-        with open(settings.USER_FILES_DIR + file_name, "wb") as f:
-            f.write(file.file.read())
+        user = UserDomain.read(id)
+        user.regist_file(id, seq, file)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return JSONResponse(

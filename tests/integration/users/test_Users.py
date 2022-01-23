@@ -92,7 +92,15 @@ def test_delete_user():
 
 
 def test_upload_file():
-    id = 999999
+    # 登録リクエスト
+    request_body = {
+        "name": "testuser",
+        "email": "test@test.com",
+        "password": "very_secret_code",
+    }
+    response = client.post("/users/create", json=request_body)
+    id = response.json()["id"]
+
     seq = 1
     with open(TEST_USER_IMAGE_FILE_PATH, "rb") as f:
         file_name = TEST_USER_IMAGE_FILE_PATH.split("/")[-1]
