@@ -1,13 +1,10 @@
-import json
-from typing import Optional
 from fastapi import APIRouter
 from fastapi import status
 from fastapi.responses import JSONResponse
 from fastapi import File, UploadFile
 from starlette.responses import Response
-import re
 from typing import List
-from exceptions.FileRegistException import FileRegistException
+from src.exceptions.FileRegistException import FileRegistException
 
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
 from src.exceptions.ValidationException import ValidationException
@@ -21,7 +18,7 @@ router = APIRouter()
 
 
 @router.post("/users/create")
-def create(request: UserIn, files: List[UploadFile] = File(...)) -> JSONResponse:
+def create(request: UserIn) -> JSONResponse:
     """
     ユーザー新規作成API
 
@@ -40,10 +37,6 @@ def create(request: UserIn, files: List[UploadFile] = File(...)) -> JSONResponse
         )
         # ユーザー新規作成
         id = user.create()
-
-        # ファイルアップロードされている場合は画像登録処理
-        if len(files) > 0:
-            user.regist_files(files)
 
         return JSONResponse({"id": id}, status.HTTP_201_CREATED)
     except ValidationException as e:
