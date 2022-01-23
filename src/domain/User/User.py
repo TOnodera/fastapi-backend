@@ -1,15 +1,13 @@
 from datetime import datetime
 from typing import List
 
-from fastapi import UploadFile
-from src.exceptions.FileRegistException import FileRegistException
-from src.config import settings
-
+from fastapi import File, UploadFile
 from src.repository.User.User import User as UserRepository
 from src.exceptions.ArgumentsIsNotSet import ArgumentsIsNotSet
 from src.domain.Value.User.CreateUser import CreateValue
 from src.domain.Value.User.UpdateUser import UpdateValue
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
+from src.repository.File.User.UserFile import UserFile
 
 
 class User:
@@ -116,6 +114,10 @@ class User:
             self.updated_at = updated_user.updated_at
 
         return updated
+
+    def regist_file(self, id: int, seq: int, file: UploadFile = File(...)) -> None:
+        user_file = UserFile()
+        user_file.regist(id, seq, file)
 
     def delete(self):
         self.__repositpry.delete(self.id)
