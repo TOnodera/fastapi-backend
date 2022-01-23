@@ -7,10 +7,15 @@ from src.exceptions.ArgumentsIsNotSet import ArgumentsIsNotSet
 from src.domain.Value.User.CreateUser import CreateValue
 from src.domain.Value.User.UpdateUser import UpdateValue
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
+from src.exceptions.FileRegistException import FileRegistException
 from src.repository.File.User.UserFile import UserFile
+from src.config import settings
 
 
 class User:
+    """
+    ユーザードメインクラス
+    """
 
     __repositpry = UserRepository()
 
@@ -27,11 +32,18 @@ class User:
         self.name = name
         self.email = email
         self.password = password
-        self.filenames = []
+        self.file_paths = []
         self.created_at = created_at
         self.updated_at = updated_at
 
     def create(self) -> int:
+        """
+        ユーザー作成メソッド。ユーザーデータをDBに登録する。
+
+        Returns
+        -----
+        id: int
+        """
         value_object = CreateValue(
             name=self.name, email=self.email, password=self.password
         )
@@ -69,12 +81,23 @@ class User:
                 filename = f"USER_{self.id}_{seq}.{ext}"
                 with open(f"{settings.USER_FILES_DIR}/{filename}", "wb") as f:
                     f.write(file.file.read())
-                    self.filenames.append(filename)
+                    self.file_paths.append(filename)
         except Exception as e:
             raise FileRegistException("ユーザー画像ファイルのアップロードに失敗しました。")
 
     @classmethod
     def read(cls, id: int) -> "User":
+        """
+        idからユーザードメインクラスを生成する。
+
+        Params
+        -----
+        id: int
+
+        Retuns
+        -----
+        user: User
+        """
         if id is None:
             raise ArgumentsIsNotSet("idにNoneがセットされています。")
         user = cls.__repositpry.read(id)
@@ -84,6 +107,19 @@ class User:
 
     @classmethod
     def all(cls, offset: int, limit: int) -> List["User"]:
+        """
+        offsetかかlimitまでのユーザードメインクラスを取得する。
+        TODO ソートは更新順、ID順か決めるか選択できるようにする。
+
+        Params
+        -----
+        offset: int
+        limit: int
+
+        Returns
+        -----
+        users: List[User]
+        """
         datas = cls.__repositpry.all(offset, limit)
         users = []
         for data in datas:
@@ -93,6 +129,15 @@ class User:
     def update(
         self, *, name: str = None, email: str = None, password: str = None
     ) -> bool:
+        """
+        ユーザーデータをアップデートする。
+
+        Params
+        -----
+        name: str
+        email: str
+        password: str
+        """
         updated = False
         value_object = UpdateValue(
             id=self.id, name=name, email=email, password=password
@@ -116,8 +161,33 @@ class User:
         return updated
 
     def regist_file(self, id: int, seq: int, file: UploadFile = File(...)) -> None:
-        user_file = UserFile()
-        user_file.regist(id, seq, file)
+        """
+        ユーザーデータを登録する。
+
+        Params
+        -----
+        id: int
+        seq: int
+        file: UploadFile
+
+        Returns
+        -----
+        None
+
+        Raises
+        -----
+        FileRegistException
+        """
+        user_file = UserFile(id)
+        user_file.regist(seq, file)
 
     def delete(self):
+        """
+        ユーザーデータを削除する。
+        """
+        # DBデータの削除
         self.__repositpry.delete(self.id)
+        user_file = UserFile(self.id)
+
+        # ファイルデータの削除
+        user_file.deletes()

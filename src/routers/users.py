@@ -3,7 +3,6 @@ from fastapi import status
 from fastapi.responses import JSONResponse
 from fastapi import File, UploadFile
 from starlette.responses import Response
-from typing import List
 from src.exceptions.FileRegistException import FileRegistException
 
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
@@ -12,7 +11,6 @@ from src.schemas.User.UserOut import UserOut
 from src.schemas.User.UserIn import UserIn
 from src.schemas.User.UserUpdate import UserUpdate
 from src.domain.User.User import User as UserDomain
-from src.config import settings
 
 router = APIRouter()
 
@@ -25,7 +23,6 @@ def create(request: UserIn) -> JSONResponse:
     Params
     -----
     request: UserIn
-    files: List[UploadFile]
 
     Returns
     -----
@@ -127,3 +124,13 @@ def upload_file(id: int, seq: int, file: UploadFile = File(...)):
         return JSONResponse(
             {"message": str(e)}, status_code=status.HTTP_400_BAD_REQUEST
         )
+
+
+@router.delete("/users/{id}/{seq}/delete-file")
+def delete_file(id: int, seq: int):
+    pass
+
+
+@router.delete("/users/{id}/delete-files")
+def delete_files(id: int):
+    pass
