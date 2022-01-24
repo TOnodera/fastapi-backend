@@ -32,7 +32,7 @@ class User:
         self.name = name
         self.email = email
         self.password = password
-        self.file_paths = []
+        self.user_file = UserFile(self.id)
         self.created_at = created_at
         self.updated_at = updated_at
 
@@ -81,8 +81,7 @@ class User:
                 filename = f"USER_{self.id}_{seq}.{ext}"
                 with open(f"{settings.USER_FILES_DIR}/{filename}", "wb") as f:
                     f.write(file.file.read())
-                    self.file_paths.append(filename)
-        except Exception as e:
+        except Exception:
             raise FileRegistException("ユーザー画像ファイルのアップロードに失敗しました。")
 
     @classmethod
@@ -98,6 +97,7 @@ class User:
         -----
         user: User
         """
+        # DBデータを取得
         if id is None:
             raise ArgumentsIsNotSet("idにNoneがセットされています。")
         user = cls.__repositpry.read(id)
@@ -178,8 +178,7 @@ class User:
         -----
         FileRegistException
         """
-        user_file = UserFile(id)
-        user_file.regist(seq, file)
+        self.user_file.regist(seq, file)
 
     def delete(self):
         """
@@ -187,7 +186,6 @@ class User:
         """
         # DBデータの削除
         self.__repositpry.delete(self.id)
-        user_file = UserFile(self.id)
 
         # ファイルデータの削除
-        user_file.deletes()
+        self.user_file.deletes()

@@ -1,11 +1,11 @@
 import os
 import pytest
-import json
 from fastapi.testclient import TestClient
 
 from src.main import app
 from src.repository.DBConnection import DBConnection
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
+from src.config import settings
 from tests.config import TEST_USER_IMAGE_FILE_PATH
 
 client = TestClient(app)
@@ -201,7 +201,6 @@ def test_users_all():
             "email": f"test{i}@test.com",
             "password": "very_secret_code",
         }
-
         response = client.post("/users/create", json=request_body)
         # レスポンスとして期待するデータを登録しておく
         response_data = response.json()
@@ -210,11 +209,40 @@ def test_users_all():
             "id": id,
             "name": request_body["name"],
             "email": request_body["email"],
+            "paths": [],
         }
-        expects.append(expect["id"])
+        # 画像を登録
+        for seq in range(1, 10):
+            with open(TEST_USER_IMAGE_FILE_PATH, "rb") as f:
+                file_name = TEST_USER_IMAGE_FILE_PATH.split("/")[-1]
+                response = client.post(
+                    f"/users/{id}/{seq}/upload-file",
+                    files={"file": (file_name, f, "image/png")},
+                )
+
+                # レスポンスコード確認
+                assert response.status_code < 300
+
+                # ファイルの存在チェック
+                ext = file_name.split(".")[-1]
+                test_file_path = (
+                    f"/home/python/app/storages/users/USER_{id}_{seq}.{ext}"
+                )
+                assert os.path.exists(test_file_path)
+                expect["paths"].append(
+                    f"{settings.CLIENT_STORAGE_DIR}/users/USER_{id}_{seq}.{ext}"
+                )
+
+        expects.append(expect)
 
     responses = client.get("/users")
     users = responses.json()
-    for user in users:
+    users = sorted(users, key=lambda user: user["id"])
+    for index, user in enumerate(users):
         # 登録したデータが存在するか確認する
-        assert user["id"] in expects
+        assert expects[index]["id"] == user["id"]
+
+        # 画像のパスが帰ってきてるかチェック
+        for path in user["paths"]:
+            # assert path in expects[index]["paths"]
+            pass

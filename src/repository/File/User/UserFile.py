@@ -1,3 +1,4 @@
+from typing import List
 from black import os
 from fastapi import UploadFile, File
 import re
@@ -29,6 +30,45 @@ class UserFile:
         file_name = f"{self.prefix}_{self.id}_{seq}.{extension}"
         with open(settings.USER_FILES_DIR + file_name, "wb") as f:
             f.write(file.file.read())
+
+    def path(self, seq: int) -> str:
+        """
+        特定のファイルを取得する。
+
+        Params
+        -----
+        seq: int
+
+        Returns
+        -----
+        path: str
+        """
+        # USER_数字_数字.拡張子に一致するリストを作成する
+        file_paths = [
+            path
+            for path in glob(f"{settings.USER_FILES_DIR}/**")
+            if re.search(f"/{self.prefix}_{self.id}_{seq}\.(png|jpg|gif)", path)
+        ]
+        return file_paths[0]
+
+    def paths(self) -> List[str]:
+        """
+        ユーザーに紐づくファイルをすべて取得する
+
+        Returns
+        -----
+        paths: List[str]
+        """
+        # USER_数字_数字.拡張子に一致するリストを作成する
+        file_paths = [
+            path
+            for path in glob(f"{settings.USER_FILES_DIR}/**")
+            if re.search(f"/{self.prefix}_{self.id}_\d+\.(png|jpg|gif)", path)
+        ]
+        results = []
+        for path in file_paths:
+            results.append(path)
+        return results
 
     def deletes(self) -> None:
         """
