@@ -1,3 +1,4 @@
+from typing import List
 from black import os
 from fastapi import UploadFile, File
 import re
@@ -29,6 +30,30 @@ class UserFile:
         file_name = f"{self.prefix}_{self.id}_{seq}.{extension}"
         with open(settings.USER_FILES_DIR + file_name, "wb") as f:
             f.write(file.file.read())
+
+    def read(self, seq: int) -> str:
+        """
+        特定のファイルを取得する。
+
+        Params
+        -----
+        seq: int
+
+        Returns
+        -----
+        path: str
+        """
+        pass
+
+    def reads(self) -> List[str]:
+        """
+        ユーザーに紐づくファイルをすべて取得する
+
+        Returns
+        -----
+        paths: List[str]
+        """
+        pass
 
     def deletes(self) -> None:
         """
