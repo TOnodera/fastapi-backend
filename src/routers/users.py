@@ -3,6 +3,7 @@ from fastapi import status
 from fastapi.responses import JSONResponse
 from fastapi import File, UploadFile
 from starlette.responses import Response
+from src.repository.File.User.UserFile import UserFile
 from src.exceptions.FileRegistException import FileRegistException
 
 from src.exceptions.NoSuchObjectException import NoSuchObjectException
@@ -122,15 +123,27 @@ def upload_file(id: int, seq: int, file: UploadFile = File(...)):
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     except Exception as e:
         return JSONResponse(
-            {"message": str(e)}, status_code=status.HTTP_400_BAD_REQUEST
+            {"message": str(e)}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
 
 
 @router.delete("/users/{id}/{seq}/delete-file")
 def delete_file(id: int, seq: int):
-    pass
+    try:
+        user_file = UserFile(id)
+        user_file.delete(seq)
+    except Exception as e:
+        return JSONResponse(
+            {"message": str(e)}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @router.delete("/users/{id}/delete-files")
 def delete_files(id: int):
-    pass
+    try:
+        user_file = UserFile(id)
+        user_file.deletes()
+    except Exception as e:
+        return JSONResponse(
+            {"message": str(e)}, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

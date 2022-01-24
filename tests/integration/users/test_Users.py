@@ -120,6 +120,78 @@ def test_upload_file():
         os.remove(test_file_path)
 
 
+def test_delete_file():
+    # 登録リクエスト
+    request_body = {
+        "name": "testuser",
+        "email": "test@test.com",
+        "password": "very_secret_code",
+    }
+    response = client.post("/users/create", json=request_body)
+    id = response.json()["id"]
+
+    seq = 1
+    with open(TEST_USER_IMAGE_FILE_PATH, "rb") as f:
+        file_name = TEST_USER_IMAGE_FILE_PATH.split("/")[-1]
+        response = client.post(
+            f"/users/{id}/{seq}/upload-file",
+            files={"file": (file_name, f, "image/png")},
+        )
+
+        # レスポンスコード確認
+        assert response.status_code < 300
+
+        # ファイルの存在チェック
+        ext = file_name.split(".")[-1]
+        test_file_path = f"/home/python/app/storages/users/USER_{id}_{seq}.{ext}"
+        assert os.path.exists(test_file_path)
+
+        # ファイル削除リクエスト
+        client.delete(f"/users/{id}/{seq}/delete-file")
+
+        # ファイルの削除チェック
+        ext = file_name.split(".")[-1]
+        test_file_path = f"/home/python/app/storages/users/USER_{id}_{seq}.{ext}"
+        assert not os.path.exists(test_file_path)
+
+
+def test_delete_files():
+    # 登録リクエスト
+    request_body = {
+        "name": "testuser",
+        "email": "test@test.com",
+        "password": "very_secret_code",
+    }
+    response = client.post("/users/create", json=request_body)
+    id = response.json()["id"]
+
+    for seq in range(1, 10):
+        with open(TEST_USER_IMAGE_FILE_PATH, "rb") as f:
+            file_name = TEST_USER_IMAGE_FILE_PATH.split("/")[-1]
+            response = client.post(
+                f"/users/{id}/{seq}/upload-file",
+                files={"file": (file_name, f, "image/png")},
+            )
+
+            # レスポンスコード確認
+            assert response.status_code < 300
+
+            # ファイルの存在チェック
+            ext = file_name.split(".")[-1]
+            test_file_path = f"/home/python/app/storages/users/USER_{id}_{seq}.{ext}"
+            assert os.path.exists(test_file_path)
+
+    # 削除リクエスト
+    client.delete(f"/users/{id}/delete-files")
+
+    for seq in range(1, 10):
+        file_name = TEST_USER_IMAGE_FILE_PATH.split("/")[-1]
+        # ファイルの削除チェック
+        ext = file_name.split(".")[-1]
+        test_file_path = f"/home/python/app/storages/users/USER_{id}_{seq}.{ext}"
+        assert not os.path.exists(test_file_path)
+
+
 def test_users_all():
     expects = []
     for i in range(10):
