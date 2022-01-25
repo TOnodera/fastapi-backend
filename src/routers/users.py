@@ -62,6 +62,7 @@ def all(offset: int = 0, limit: int = 10):
                     "id": user.id,
                     "name": user.name,
                     "email": user.email,
+                    "paths": user.user_file.paths(),
                     "created_at": str(user.created_at),
                     "updated_at": str(user.updated_at),
                 }
