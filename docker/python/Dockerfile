@@ -1,8 +1,8 @@
 FROM python:3.9-buster
 
 RUN apt update 
-# 開発用tmux
-RUN apt install -y tmux
+# 開発用tmux vim
+RUN apt install -y tmux vim
 RUN useradd python -u 1000 -m
 
 WORKDIR /home/python/app
