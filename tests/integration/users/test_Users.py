@@ -244,5 +244,4 @@ def test_users_all():
 
         # 画像のパスが帰ってきてるかチェック
         for path in user["paths"]:
-            # assert path in expects[index]["paths"]
-            pass
+            assert path in expects[index]["paths"]

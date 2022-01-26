@@ -49,7 +49,8 @@ class UserFile:
             for path in glob(f"{settings.USER_FILES_DIR}/**")
             if re.search(f"/{self.prefix}_{self.id}_{seq}\.(png|jpg|gif)", path)
         ]
-        return file_paths[0]
+        file_name = file_paths[0].split("/")[-1]
+        return f"{settings.CLIENT_STORAGE_DIR}/users/{file_name}"
 
     def paths(self) -> List[str]:
         """
@@ -67,7 +68,9 @@ class UserFile:
         ]
         results = []
         for path in file_paths:
-            results.append(path)
+            file_name = path.split("/")[-1]
+            client_path = f"{settings.CLIENT_STORAGE_DIR}/users/{file_name}"
+            results.append(client_path)
         return results
 
     def deletes(self) -> None:
