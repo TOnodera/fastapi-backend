@@ -232,6 +232,8 @@ def test_users_all():
                 expect["paths"].append(
                     f"{settings.CLIENT_STORAGE_DIR}/users/USER_{id}_{seq}.{ext}"
                 )
+                # 後始末
+                os.remove(test_file_path)
 
         expects.append(expect)
 
