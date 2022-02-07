@@ -230,11 +230,13 @@ def test_users_all():
                 )
                 assert os.path.exists(test_file_path)
                 expect["paths"].append(
-                    f"{settings.CLIENT_STORAGE_DIR}/users/USER_{id}_{seq}.{ext}"
+                    {
+                        "storage_name": "users",
+                        "file_name": f"USER_{id}_{seq}.{ext}",
+                    }
                 )
-                # 後始末
-                os.remove(test_file_path)
-
+                # 後始末用
+                expect["test_file_path"] = test_file_path
         expects.append(expect)
 
     responses = client.get("/users")
@@ -246,4 +248,6 @@ def test_users_all():
 
         # 画像のパスが帰ってきてるかチェック
         for path in user["paths"]:
-            assert path in expects[index]["paths"]
+            assert path["storage_name"] == expects[index]["storage_name"]
+            assert path["file_name"] == expects[index]["file_name"]
+            os.remove(path["test_file_path"])
