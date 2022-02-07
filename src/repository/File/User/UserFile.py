@@ -9,6 +9,7 @@ from src.config import settings
 class UserFile:
     def __init__(self, id: int) -> None:
         self.prefix = "USER"
+        self.storage_name = "users"
         self.id = id
 
     def regist(self, seq: int, file: UploadFile = File(...)) -> None:
@@ -50,7 +51,7 @@ class UserFile:
             if re.search(f"/{self.prefix}_{self.id}_{seq}\.(png|jpg|gif)", path)
         ]
         file_name = file_paths[0].split("/")[-1]
-        return f"{settings.CLIENT_STORAGE_DIR}/users/{file_name}"
+        return {"storage_name": self.storage_name, "file_name": file_name}
 
     def paths(self) -> List[str]:
         """
@@ -69,8 +70,7 @@ class UserFile:
         results = []
         for path in file_paths:
             file_name = path.split("/")[-1]
-            client_path = f"{settings.CLIENT_STORAGE_DIR}/users/{file_name}"
-            results.append(client_path)
+            results.append({"storage_name": self.storage_name, "file_name": file_name})
         return results
 
     def deletes(self) -> None:

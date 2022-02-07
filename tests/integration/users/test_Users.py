@@ -233,6 +233,7 @@ def test_users_all():
                     {
                         "storage_name": "users",
                         "file_name": f"USER_{id}_{seq}.{ext}",
+                        "test_file_path": test_file_path,
                     }
                 )
                 # 後始末用
@@ -247,7 +248,7 @@ def test_users_all():
         assert expects[index]["id"] == user["id"]
 
         # 画像のパスが帰ってきてるかチェック
-        for path in user["paths"]:
-            assert path["storage_name"] == expects[index]["storage_name"]
-            assert path["file_name"] == expects[index]["file_name"]
-            os.remove(path["test_file_path"])
+        for idx, path in enumerate(user["paths"]):
+            assert path["storage_name"] == expects[index]["paths"][idx]["storage_name"]
+            assert path["file_name"] == expects[index]["paths"][idx]["file_name"]
+            os.remove(expects[index]["paths"][idx]["test_file_path"])
