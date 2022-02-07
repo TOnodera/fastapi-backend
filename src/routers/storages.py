@@ -8,7 +8,7 @@ import os
 router = APIRouter()
 
 
-@router("/storage/{storage_name}/{file_name}")
+@router.post("/storage/{storage_name}/{file_name}")
 def resourses(storage_name: str, file_name: str):
     path_file = f"{settings.FILES_DIR}/{storage_name}/{file_name}"
     if os.path.exists(path_file):
