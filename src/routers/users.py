@@ -82,6 +82,7 @@ def read(id: int):
             "id": user.id,
             "name": user.name,
             "email": user.email,
+            "paths": user.user_file.paths(),
             "created_at": user.created_at,
             "updated_at": user.updated_at,
         }

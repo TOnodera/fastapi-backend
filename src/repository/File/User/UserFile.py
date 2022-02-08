@@ -53,13 +53,13 @@ class UserFile:
         file_name = file_paths[0].split("/")[-1]
         return {"storage_name": self.storage_name, "file_name": file_name}
 
-    def paths(self) -> List[str]:
+    def paths(self) -> List[dict]:
         """
         ユーザーに紐づくファイルをすべて取得する
 
         Returns
         -----
-        paths: List[str]
+        paths: List[dict]
         """
         # USER_数字_数字.拡張子に一致するリストを作成する
         file_paths = [
