@@ -31,7 +31,7 @@ def create(request: UserIn) -> JSONResponse:
     """
     try:
         user = UserDomain(
-            name=request.name, email=request.email, password=request.password
+            username=request.username, email=request.email, password=request.password
         )
         # ユーザー新規作成
         id = user.create()
@@ -60,7 +60,7 @@ def all(offset: int = 0, limit: int = 10):
             response.append(
                 {
                     "id": user.id,
-                    "name": user.name,
+                    "username": user.username,
                     "email": user.email,
                     "paths": user.user_file.paths(),
                     "created_at": str(user.created_at),
@@ -80,7 +80,7 @@ def read(id: int):
         user = UserDomain.read(id)
         return {
             "id": user.id,
-            "name": user.name,
+            "username": user.username,
             "email": user.email,
             "paths": user.user_file.paths(),
             "created_at": user.created_at,
@@ -97,8 +97,12 @@ def read(id: int):
 def update(id: int, request: UserUpdate):
     try:
         user = UserDomain.read(id)
-        user.update(name=request.name, email=request.email, password=request.password)
-        return JSONResponse({"id": user.id, "name": user.name, "email": user.email})
+        user.update(
+            username=request.username, email=request.email, password=request.password
+        )
+        return JSONResponse(
+            {"id": user.id, "username": user.username, "email": user.email}
+        )
     except NoSuchObjectException as e:
         return JSONResponse(
             {"message": str(e)}, status_code=status.HTTP_400_BAD_REQUEST

@@ -1,7 +1,7 @@
 -- ユーザーテーブル
 create table if not exists users (
   id serial not null
-  , name varchar(100) not null
+  , username varchar(100) not null
   , email varchar(256) not null
   , password varchar(32) not null
   , updated_at timestamp default now() not null
@@ -11,7 +11,7 @@ create table if not exists users (
 
 comment on table users is 'ユーザーテーブル:ユーザーテーブル';
 comment on column users.id is 'id:シーケンス';
-comment on column users.name is '名前';
+comment on column users.username is '名前';
 comment on column users.email is 'メールアドレス';
 comment on column users.password is 'パスワード';
 comment on column users.updated_at is '更新日';

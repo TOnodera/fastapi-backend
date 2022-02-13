@@ -21,7 +21,7 @@ class User:
 
     def __init__(
         self,
-        name: str,
+        username: str,
         email: str,
         id: int = None,
         password: str = None,
@@ -29,7 +29,7 @@ class User:
         updated_at: datetime = None,
     ) -> None:
         self.id = id
-        self.name = name
+        self.username = username
         self.email = email
         self.password = password
         self.user_file = UserFile(self.id)
@@ -45,10 +45,10 @@ class User:
         id: int
         """
         value_object = CreateValue(
-            name=self.name, email=self.email, password=self.password
+            username=self.username, email=self.email, password=self.password
         )
         id = self.__repositpry.create(
-            name=value_object.name,
+            username=value_object.username,
             email=value_object.email,
             password=value_object.password,
         )
@@ -56,7 +56,7 @@ class User:
         registered_user = self.read(id)
 
         self.id = id
-        self.name = registered_user.name
+        self.username = registered_user.username
         self.email = registered_user.email
         self.created_at = registered_user.created_at
         self.updated_at = registered_user.updated_at
@@ -127,24 +127,24 @@ class User:
         return users
 
     def update(
-        self, *, name: str = None, email: str = None, password: str = None
+        self, *, username: str = None, email: str = None, password: str = None
     ) -> bool:
         """
         ユーザーデータをアップデートする。
 
         Params
         -----
-        name: str
+        username: str
         email: str
         password: str
         """
         updated = False
         value_object = UpdateValue(
-            id=self.id, name=name, email=email, password=password
+            id=self.id, username=username, email=email, password=password
         )
-        if name is not None:
-            self.name = value_object.name
-            updated = self.__repositpry.update(name=name, id=self.id)
+        if username is not None:
+            self.username = value_object.username
+            updated = self.__repositpry.update(username=username, id=self.id)
 
         if email is not None:
             self.email = value_object.email

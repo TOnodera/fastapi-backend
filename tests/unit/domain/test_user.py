@@ -17,7 +17,7 @@ def set_up():
 
 def test_create():
     data = {
-        "name": "test_string",
+        "username": "test_string",
         "email": "test_email@net.com",
         "password": "password",
     }
@@ -27,7 +27,7 @@ def test_create():
 
     assert isinstance(registered_data, UserDomain)
     assert registered_data.id == id
-    assert registered_data.name == data["name"]
+    assert registered_data.username == data["username"]
     assert registered_data.email == data["email"]
     assert registered_data.password is None
     assert registered_data.created_at is not None
@@ -35,7 +35,7 @@ def test_create():
 
     # メールアドレスの重複チェック
     data = {
-        "name": "test_string",
+        "username": "test_string",
         "email": "test_email@net.com",
         "password": "password",
     }
@@ -46,7 +46,7 @@ def test_create():
 
     # メールアドレスの形式チェック
     invalid_email_data = {
-        "name": "test",
+        "username": "test",
         "email": "this_is_email_daaaa",
         "password": "pass",
     }
@@ -59,7 +59,7 @@ def test_create():
 @pytest.mark.usefixtures("set_up")
 def test_read():
     data = {
-        "name": "test_string",
+        "username": "test_string",
         "email": "test_email@net.com",
         "password": "password",
     }
@@ -69,7 +69,7 @@ def test_read():
 
     registered_data = user.read(id)
     assert registered_data.id == id
-    assert registered_data.name == data["name"]
+    assert registered_data.username == data["username"]
     assert registered_data.email == data["email"]
     assert registered_data.created_at is not None
     assert registered_data.updated_at is not None
@@ -78,7 +78,7 @@ def test_read():
 @pytest.mark.usefixtures("set_up")
 def test_update():
     data = {
-        "name": "test_string",
+        "username": "test_string",
         "email": "test_email@net.com",
         "password": "password",
     }
@@ -91,7 +91,7 @@ def test_update():
     updated_at = registered_data.updated_at
 
     data2 = {
-        "name": "test_string2",
+        "username": "test_string2",
         "email": "test_email2@net.com",
         "password": "password2",
     }
@@ -99,7 +99,7 @@ def test_update():
     time.sleep(1)
     user.update(**data2)
 
-    assert user.name == data2["name"]
+    assert user.username == data2["username"]
     assert user.email == data2["email"]
     assert user.created_at == created_at
     assert user.updated_at > updated_at
@@ -108,7 +108,7 @@ def test_update():
 @pytest.mark.usefixtures("set_up")
 def test_delete():
     data = {
-        "name": "test_string",
+        "username": "test_string",
         "email": "test_email@net.com",
         "password": "password",
     }
@@ -129,7 +129,7 @@ def test_all():
     id_list = []
     for i in range(10):
         data = {
-            "name": f"test_user{i}",
+            "username": f"test_user{i}",
             "email": f"test_email{i}@net.com",
             "password": "password",
         }
@@ -144,5 +144,5 @@ def test_all():
     assert len(users) == 10
 
     for index, user in enumerate(users):
-        assert user.name == f"test_user{index}"
+        assert user.username == f"test_user{index}"
         assert user.email == f"test_email{index}@net.com"

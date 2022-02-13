@@ -6,17 +6,17 @@ from src.exceptions.ValidationException import ValidationException
 
 class UpdateValue:
     def __init__(
-        self, *, id: int, name: str = None, email: str = None, password: str = None
+        self, *, id: int, username: str = None, email: str = None, password: str = None
     ):
         self.__repo = UserRepository()
-        self.__name = self.__validate_name(name)
+        self.__username = self.__validate_username(username)
         self.__email = self.__validate_email(email)
         self.__password = self.__validate_password(password)
         self.__id = self.__validate_id(id)
 
     @property
-    def name(self) -> str:
-        return self.__name
+    def username(self) -> str:
+        return self.__username
 
     @property
     def email(self) -> str:
@@ -30,8 +30,8 @@ class UpdateValue:
     def id(self) -> int:
         return self.__id
 
-    def __validate_name(self, name: str) -> str:
-        return name
+    def __validate_username(self, username: str) -> str:
+        return username
 
     def __validate_email(self, email: str) -> str:
 

@@ -3,6 +3,6 @@ from pydantic import BaseModel
 
 
 class UserUpdate(BaseModel):
-    name: Optional[str]
+    username: Optional[str]
     email: Optional[str]
     password: Optional[str]

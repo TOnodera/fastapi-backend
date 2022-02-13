@@ -19,7 +19,7 @@ def set_up():
 
 def test_create_user():
     request_body = {
-        "name": "testuser",
+        "username": "testuser",
         "email": "test@test.com",
         "password": "very_secret_code",
     }
@@ -29,7 +29,7 @@ def test_create_user():
 
 def test_read_users():
     request_body = {
-        "name": "testuser",
+        "username": "testuser",
         "email": "test@test.com",
         "password": "very_secret_code",
     }
@@ -41,7 +41,7 @@ def test_read_users():
     response_data = response.json()
 
     assert response.status_code == 200
-    assert request_body["name"] == response_data["name"]
+    assert request_body["username"] == response_data["username"]
     assert request_body["email"] == response_data["email"]
     assert "password" not in response_data
 
@@ -49,7 +49,7 @@ def test_read_users():
 def test_update_user():
     # 登録リクエスト
     request_body = {
-        "name": "testuser",
+        "username": "testuser",
         "email": "test@test.com",
         "password": "very_secret_code",
     }
@@ -58,7 +58,7 @@ def test_update_user():
 
     # 更新リクエスト
     update_body = {
-        "name": "update_test_user",
+        "username": "update_test_user",
         "email": "update_test@test.com",
         "password": "update_password",
     }
@@ -68,7 +68,7 @@ def test_update_user():
     # 更新を確認
     response = client.get(f"/users/{registered_id}")
     response_data = response.json()
-    assert update_body["name"] == response_data["name"]
+    assert update_body["username"] == response_data["username"]
     assert update_body["email"] == response_data["email"]
     assert "password" not in response_data
 
@@ -76,7 +76,7 @@ def test_update_user():
 def test_delete_user():
     # 登録リクエスト
     request_body = {
-        "name": "testuser",
+        "username": "testuser",
         "email": "test@test.com",
         "password": "very_secret_code",
     }
@@ -94,7 +94,7 @@ def test_delete_user():
 def test_upload_file():
     # 登録リクエスト
     request_body = {
-        "name": "testuser",
+        "username": "testuser",
         "email": "test@test.com",
         "password": "very_secret_code",
     }
@@ -123,7 +123,7 @@ def test_upload_file():
 def test_delete_file():
     # 登録リクエスト
     request_body = {
-        "name": "testuser",
+        "username": "testuser",
         "email": "test@test.com",
         "password": "very_secret_code",
     }
@@ -158,7 +158,7 @@ def test_delete_file():
 def test_delete_files():
     # 登録リクエスト
     request_body = {
-        "name": "testuser",
+        "username": "testuser",
         "email": "test@test.com",
         "password": "very_secret_code",
     }
@@ -197,7 +197,7 @@ def test_users_all():
     for i in range(10):
         # 登録リクエスト
         request_body = {
-            "name": f"testuser_{i}",
+            "username": f"testuser_{i}",
             "email": f"test{i}@test.com",
             "password": "very_secret_code",
         }
@@ -207,7 +207,7 @@ def test_users_all():
         id = response_data["id"]
         expect = {
             "id": id,
-            "name": request_body["name"],
+            "username": request_body["username"],
             "email": request_body["email"],
             "paths": [],
         }

@@ -5,15 +5,15 @@ from src.exceptions.ValidationException import ValidationException
 
 
 class CreateValue:
-    def __init__(self, *, name: str, email: str, password: str = None):
+    def __init__(self, *, username: str, email: str, password: str = None):
         self.__repo = UserRepository()
-        self.__name = self.__validate_name(name)
+        self.__username = self.__validate_username(username)
         self.__email = self.__validate_email(email)
         self.__password = self.__validate_password(password)
 
     @property
-    def name(self) -> str:
-        return self.__name
+    def username(self) -> str:
+        return self.__username
 
     @property
     def email(self) -> str:
@@ -23,12 +23,12 @@ class CreateValue:
     def password(self) -> str:
         return self.__password
 
-    def __validate_name(self, name: str) -> str:
+    def __validate_username(self, username: str) -> str:
 
-        if name is None:
+        if username is None:
             raise ValidationException("名前を入力してください。")
 
-        return name
+        return username
 
     def __validate_email(self, email: str) -> str:
 

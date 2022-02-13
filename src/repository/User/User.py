@@ -11,7 +11,7 @@ class User:
         self.users = DBConnection.get_users()
         self.session = DBConnection.get_session()
 
-    def create(self, *, name: str, email: str, password: str) -> int:
+    def create(self, *, username: str, email: str, password: str) -> int:
         """
         ユーザーデータの登録
 
@@ -27,7 +27,7 @@ class User:
 
         """
         hashed_pass = hashlib.sha512(password.encode()).hexdigest()
-        new_user = self.users(name=name, email=email, password=hashed_pass)
+        new_user = self.users(username=username, email=email, password=hashed_pass)
         self.session.add(new_user)
         self.session.commit()
         self.session.flush()
@@ -38,7 +38,7 @@ class User:
         if orm is not None:
             return {
                 "id": orm.id,
-                "name": orm.name,
+                "username": orm.username,
                 "email": orm.email,
                 "created_at": orm.created_at,
                 "updated_at": orm.updated_at,
@@ -46,7 +46,7 @@ class User:
         return None
 
     def update(
-        self, *, id: int, name: str = None, email: str = None, password: str = None
+        self, *, id: int, username: str = None, email: str = None, password: str = None
     ) -> bool:
         """
         データの更新を行う。
@@ -54,7 +54,7 @@ class User:
         Params
         -----
         id: int
-        name: str
+        username: str
         email: str
         password: str
 
@@ -65,8 +65,8 @@ class User:
         """
         updated = False
         orm = self.session.query(self.users).filter(self.users.id == id).first()
-        if name is not None and orm.name != name:
-            orm.name = name
+        if username is not None and orm.username != username:
+            orm.username = username
             updated = True
 
         if email is not None and orm.email != email:
@@ -101,7 +101,7 @@ class User:
             results.append(
                 {
                     "id": user.id,
-                    "name": user.name,
+                    "username": user.username,
                     "email": user.email,
                     "created_at": user.created_at,
                     "updated_at": user.updated_at,

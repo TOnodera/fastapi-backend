@@ -11,28 +11,28 @@ def set_up():
 
 
 def test_create():
-    name = "takeshi"
+    username = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
     user_repository = UserRepository()
 
-    user_data = {"name": name, "email": email, "password": password}
+    user_data = {"username": username, "email": email, "password": password}
     id = user_repository.create(**user_data)
 
     got_user = user_repository.read(id)
 
-    assert got_user["name"] == user_data["name"]
+    assert got_user["username"] == user_data["username"]
     assert got_user["email"] == user_data["email"]
     assert got_user["id"] == id
 
 
 def test_read():
-    name = "takeshi"
+    username = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
     user_repository = UserRepository()
 
-    user_data = {"name": name, "email": email, "password": password}
+    user_data = {"username": username, "email": email, "password": password}
     id = user_repository.create(**user_data)
 
     got_user = user_repository.read(id)
@@ -40,29 +40,29 @@ def test_read():
 
 
 def test_update():
-    name = "takeshi"
+    username = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
     user_repository = UserRepository()
 
-    user_data = {"name": name, "email": email, "password": password}
+    user_data = {"username": username, "email": email, "password": password}
     id = user_repository.create(**user_data)
 
-    updated_data = {"name": "onodera", "id": id}
+    updated_data = {"username": "onodera", "id": id}
     updated = user_repository.update(**updated_data)
     got_user = user_repository.read(id)
 
     assert updated
-    assert got_user["name"] == updated_data["name"]
+    assert got_user["username"] == updated_data["username"]
 
 
 def test_delete():
-    name = "takeshi"
+    username = "takeshi"
     email = "takeshi@mail.com"
     password = "password"
     user_repository = UserRepository()
 
-    user_data = {"name": name, "email": email, "password": password}
+    user_data = {"username": username, "email": email, "password": password}
     id = user_repository.create(**user_data)
 
     user_repository.delete(id)
